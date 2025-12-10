@@ -1,7 +1,7 @@
-﻿# A Layered Epistemic Axiom for Reliability-Weighted Inference
+﻿# A Layered Epistemic Algorithm for Reliability-Weighted Inference
 
 This repository contains the LaTeX source and accompanying material for a
-conceptual AI paper proposing a **Layered Epistemic Axiom**—a general principle 
+conceptual AI paper proposing a **Layered Epistemic Algorithm**—a general principle 
 for anomaly interpretation and belief revision in intelligent systems.
 
 ## 📌 Core Idea
