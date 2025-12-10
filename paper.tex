@@ -5,6 +5,9 @@
 \usepackage{authblk}
 \usepackage{hyperref}
 \usepackage[margin=1in]{geometry}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+
 
 \title{A Layered Epistemic Axiom for Reliability-Weighted Inference in Spatial and Multimodal Intelligence}
 \author{Joe Yap}
@@ -124,6 +127,46 @@ Although the diagnostic ordering $H_0 \rightarrow H_1 \rightarrow H_2$ provides 
                    Belief Update
         ΔBelief ∝ r(C) × Surprise(o | M, A)
 \end{verbatim}
+
+
+\subsection{Case Study: The Yoshigahara Phase Change}
+
+This example is adapted from a numeric tree puzzle attributed to Nob Yoshigahara, a noted Japanese puzzle designer whose works often require abandoning an initially plausible local rule in favor of a deeper global structure.
+
+Consider a numeric tree in which each parent node is assumed to be determined by a simple arithmetic relationship between its two children. A natural first hypothesis is the \emph{subtraction model}, under which each parent equals the absolute difference of its children. This model fits the upper portion of the tree exactly: for instance,
+\(|99 - 72| = 27\), \(|45 - 27| = 18\), and \(|39 - 18| = 21\).
+
+A discrepancy emerges at a lower node with children \(13\) and \(21\). The subtraction model predicts a parent value of \(8\), yet the observed value is \(7\). This mismatch produces high surprise under the current model.
+
+Two epistemic policies produce qualitatively different inferences:
+
+\paragraph{Low-Reliability Interpretation (Favoring \(H_0\)).}
+If the observation is assumed to come from a noisy or unreliable channel, the agent attributes the mismatch to a channel error (\(H_0\)). The value ``7'' is treated as a likely transcription mistake, the subtraction model is retained, and the remaining unknown in the puzzle is inferred consistently with that model.
+
+\paragraph{High-Reliability Interpretation (Favoring \(H_2\)).}
+If the observation is instead assumed to be highly reliable---as is appropriate for a carefully designed logic puzzle---the gate for \(H_0\) effectively closes. The anomaly then forces evaluation of deeper hypotheses, and the agent concludes that the subtraction model itself must be incorrect (\(H_2\)). A search for an alternative rule yields a relationship consistent with all nodes, including the anomalous one.
+
+\paragraph{Epistemic Phase Change.}
+The two interpretations differ not in the data but in the epistemic policy governing whether the anomaly activates \(H_0\) or \(H_2\). A small change in channel reliability \(r(C)\) induces a qualitative shift in reasoning: from treating the anomaly as noise to treating it as decisive evidence for model revision. This illustrates how the Layered Epistemic Axiom governs the flow of inference and how the ordering \(H_0 \rightarrow H_1 \rightarrow H_2\) shapes an agent's willingness to abandon an initially adequate model in favor of a more globally coherent one.
+
+\begin{figure}[h]
+\centering
+\[
+\begin{array}{ccc}
+99 & 72 & \rightarrow 27 \\
+45 & 27 & \rightarrow 18 \\
+39 & 18 & \rightarrow 21 \\
+28 & 15 & \rightarrow 13 \\
+13 & 21 & \rightarrow 7
+\end{array}
+\]
+\caption{Numeric relations in the Yoshigahara puzzle. Under the subtraction
+hypothesis each row is interpreted as $|a-b|=c$ and the first four rows fit
+perfectly. The last row breaks the pattern, since $|21-13| = 8$ rather than
+the observed $7$, creating the anomaly that triggers the epistemic phase change.}
+\end{figure}
+
+
 
 \section{Relevance to Spatial and Embodied Intelligence}
 
