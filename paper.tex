@@ -8,8 +8,7 @@
 \usepackage{tikz}
 \usetikzlibrary{positioning}
 
-
-\title{A Layered Epistemic Algorithm for Reliability-Weighted Inference in Spatial and Multimodal Intelligence}
+\title{A Layered Epistemic Update Rule for Reliability-Weighted Inference in Spatial and Multimodal Intelligence}
 \author{Joe Yap}
 \affil{Independent Researcher}
 \date{12/9/2025}
@@ -19,18 +18,24 @@
 \maketitle
 
 \begin{abstract}
-Spatial and embodied intelligence require not only accurate perception but also principled strategies for interpreting mismatches between observation and expectation. This note introduces a \textbf{Layered Epistemic Algorithm}, a simple but general rule for anomaly handling in intelligent systems. The Algorithm states that belief updates should scale with the reliability of the information channel and the surprise of the observation, and further that inconsistencies should be interpreted in a fixed causal order: channel before assumptions before model. This framework complements multimodal AI, robotics, grounded cognition, and world-model learning by providing a unified reliability-weighted mechanism for belief revision.
+Spatial and embodied intelligence require not only accurate perception but also principled strategies for interpreting mismatches between observation and expectation. This note introduces a \textbf{Layered Epistemic Update Rule}, a simple but general principle for anomaly handling in intelligent systems. The rule states that belief updates should scale with the reliability of the information channel and the surprise of the observation, and further that inconsistencies should be interpreted in a fixed causal order: channel before assumptions before model. This framework complements multimodal AI, robotics, grounded cognition, and world-model learning by providing a unified reliability-weighted mechanism for belief revision and a structured policy for deciding when to treat anomalies as noise and when to treat them as evidence for model change.
 \end{abstract}
 
 \section{Introduction}
 
 Intelligent agents operating in uncertain environments must continuously interpret incoming observations and determine how strongly these observations should influence their internal beliefs. Even in structured reasoning tasks, localized inconsistencies arise frequently due to noise, occlusion, environmental conditions, or incomplete assumptions. Without principled anomaly handling, an agent may overreact to noise, underreact to genuine anomalies, or prematurely revise its core model.
 
-We propose a \textbf{Layered Epistemic Algorithm} that formalizes how agents should weight evidence, interpret inconsistencies, and update beliefs. The Algorithm is broadly applicable to spatial intelligence, multimodal reasoning, robotics, and cognitive-style world-models. It is intentionally presented as a conceptual principle rather than a fully specified algorithm, with the goal of providing a compact, cross-domain rule for robust anomaly interpretation.
+We propose a \textbf{Layered Epistemic Update Rule} that formalizes how agents should weight evidence, interpret inconsistencies, and update beliefs. The rule is broadly applicable to spatial intelligence, multimodal reasoning, robotics, and cognitive-style world-models. It is intentionally presented as a conceptual principle rather than a fully specified algorithm, with the goal of providing a compact, cross-domain rule for robust anomaly interpretation.
 
 \section{Relation to Existing Epistemic and Bayesian Frameworks}
 
-Although the mathematical components of this Algorithm draw on familiar Bayesian concepts such as likelihood, reliability weighting, and prediction error, the Algorithm itself is not a restatement of standard Bayesian inference. The contribution here is a \emph{new epistemic rule}: a structured, three-layer ordering for interpreting inconsistencies (channel $\rightarrow$ assumptions $\rightarrow$ model), imposed as an explicit priors-over-causes principle rather than being left implicit in a generative model. Traditional Bayesian formulations treat all explanatory hypotheses within a single unified inference step, whereas the proposed Algorithm elevates the diagnostic ordering itself to a first-class design constraint. This layered structure is conceptually new and aims to guide robust reasoning in multimodal and embodied settings where channels, assumptions, and world-models fail in qualitatively different ways.
+Although the mathematical components of this update rule draw on familiar Bayesian concepts such as likelihood, reliability weighting, and prediction error, the proposal is \emph{not} intended as an alternative to Bayesian inference. Rather, it should be understood as an \emph{architectural constraint} or \emph{design principle} that can be layered on top of standard Bayesian or variational formulations.
+
+The contribution here is a \emph{specific epistemic policy}: a structured, three-layer ordering for interpreting inconsistencies (channel $\rightarrow$ assumptions $\rightarrow$ model), imposed as an explicit priors-over-causes principle rather than being left implicit in a generative model. Traditional Bayesian formulations treat all explanatory hypotheses within a single unified inference step; in principle, an anomalous observation can be explained by sensor noise, contextual shifts, or changes in the underlying dynamics. The Layered Epistemic Update Rule elevates the diagnostic ordering itself to a first-class design constraint, stating that agents should examine channel-level explanations before assumption-level explanations, and both before revising core model structure.
+
+Hierarchical Bayesian and predictive-processing models do represent multiple levels (for example, sensory, contextual, and structural) and propagate prediction errors between them. However, they typically treat the space of explanations as part of a single generative model rather than imposing an explicit diagnostic ordering over distinct classes of failure (channel versus assumptions versus model) as a reusable design pattern. In such frameworks, an anomalous observation can in principle be attributed to any level, but the relative ordering among levels is not usually encoded as a standalone epistemic rule.
+
+Similarly, probabilistic robotics routinely combines multiple sensors via reliability-weighted fusion and employs outlier rejection, but the decision about whether to discount a sensor, revise a map, or change the motion model is often handled heuristically or by separate modules. The Layered Epistemic Update Rule makes this choice explicit and central by specifying a fixed diagnostic ladder $H_0 \rightarrow H_1 \rightarrow H_2$ as an a priori design constraint for robust anomaly handling, rather than an emergent property of a particular implementation. In this sense, the proposal is best viewed as a practical epistemic architecture that is fully compatible with existing Bayesian techniques but emphasizes a particular causal ordering over explanatory hypotheses.
 
 \section{Example: Anomaly Interpretation in Structured Reasoning}
 
@@ -45,11 +50,11 @@ Different epistemic policies produce different reasoning behaviors. A pattern-fi
 
 \section{Epistemic Phase Change}
 
-A notable phenomenon occurs when shifting epistemic policies: a small adjustment in how anomalies are prioritized can yield a qualitative shift in the inferred model structure. Under default heuristics, a surprising observation may be ignored or explained away locally. Under the proposed Algorithm, the same observation---if it is both reliable and surprising---triggers a search for a globally coherent explanation.
+A notable phenomenon occurs when shifting epistemic policies: a small adjustment in how anomalies are prioritized can yield a qualitative shift in the inferred model structure. Under default heuristics, a surprising observation may be ignored or explained away locally. Under the proposed update rule, the same observation---if it is both reliable and surprising---triggers a search for a globally coherent explanation.
 
 This \textbf{epistemic phase change} illustrates how meta-level reasoning rules affect inference quality. Such transitions are central to robust AI reasoning, whether in spatial perception, multimodal fusion, or grounded world-modeling.
 
-\section{The Layered Epistemic Algorithm}
+\section{The Layered Epistemic Update Rule}
 
 Let:
 \begin{itemize}
@@ -68,13 +73,21 @@ The magnitude of the belief update is given schematically by
 \end{equation}
 where $\text{Surprise}(o \mid M, A)$ measures the prediction error relative to the agent's expectations under $M$ and $A$.
 
-Intuitively, belief change should be greatest when an observation is \emph{both} highly reliable and highly surprising under the current model and assumptions. Conversely, low-reliability or low-surprise observations should produce small updates.
+This expression is intended as a \emph{phenomenological scaling relationship} rather than a literal algorithmic update: it states that, all else equal, belief change should be greatest when an observation is \emph{both} highly reliable and highly surprising under the current model and assumptions. Conversely, low-reliability or low-surprise observations should produce small updates, independently of the precise functional form used in a particular implementation.
 
 \subsection{Operationalizing $r(C)$ and Surprise}
 
-The quantities $r(C)$ and $\text{Surprise}(o \mid M, A)$ are intentionally defined at the level of an epistemic principle rather than a fixed algorithmic prescription. In practice, $r(C)$ may be instantiated as any measure of channel reliability, including inverse sensor noise variance in robotics, confidence scores in vision systems, or uncertainty estimates derived from model ensembles or calibration techniques. Likewise, $\text{Surprise}(o \mid M, A)$ may be implemented as negative log-likelihood under a predictive model, as a prediction-error norm, or as a divergence between expected and observed features. The Algorithm does not depend on a specific functional form; rather, it asserts that belief updates should scale with whichever reliability and surprise estimates are appropriate for the system. This flexibility allows the Algorithm to apply uniformly across perceptual modalities, symbolic reasoning tasks, and multimodal architectures.
+The quantities $r(C)$ and $\text{Surprise}(o \mid M, A)$ are intentionally defined at the level of an epistemic principle rather than a fixed algorithmic prescription. In practice, $r(C)$ may be instantiated as any measure of channel reliability, including inverse sensor noise variance in robotics, confidence scores in vision systems, or uncertainty estimates derived from model ensembles or calibration techniques. Crucially, $r(C)$ is treated as an \emph{exogenous} estimate derived from calibration, historical variance, modality characteristics, or diagnostics, rather than being inferred solely from the same anomalous observation; this avoids circularly declaring a channel unreliable because it produced a surprising datum.
 
-The use of a scalar reliability term $r(C)$ is a deliberate simplification at the level of the Algorithm. In real systems, uncertainty is often multidimensional, state-dependent, or represented by full covariance structures rather than a single number. Nothing in the Algorithm precludes such richer forms; $r(C)$ may be replaced by a vector of reliability components, a covariance matrix, or a learned uncertainty estimate without altering the principle itself. The scalar formulation serves only to express the epistemic role of channel reliability in the simplest possible form. As empirical implementations of the Algorithm mature, more expressive representations of reliability can be employed where appropriate, but the conceptual structure---the scaling of belief updates by channel trustworthiness---remains unchanged.
+Likewise, $\text{Surprise}(o \mid M, A)$ may be implemented as negative log-likelihood under a predictive model, as a prediction-error norm, or as a divergence between expected and observed features. The update rule does not depend on a specific functional form; rather, it asserts that belief updates should scale with whichever reliability and surprise estimates are appropriate for the system. This flexibility allows the rule to apply uniformly across perceptual modalities, symbolic reasoning tasks, and multimodal architectures.
+
+The use of a scalar reliability term $r(C)$ is a deliberate simplification at the level of the principle. In real systems, uncertainty is often multidimensional, state-dependent, or represented by full covariance structures rather than a single number. Nothing in the rule precludes such richer forms; $r(C)$ may be replaced by a vector of reliability components, a covariance matrix, or a learned uncertainty estimate without altering the principle itself. The scalar formulation serves only to express the epistemic role of channel reliability in the simplest possible form. As empirical implementations of the rule mature, more expressive representations of reliability can be employed where appropriate, but the conceptual structure---the scaling of belief updates by channel trustworthiness---remains unchanged.
+
+For concreteness, one might instantiate $r(C)$ as a normalized reliability score, such as
+\[
+r(C) = 1 - \frac{\sigma_C^2}{\sigma_{\max}^2},
+\]
+where $\sigma_C^2$ is an estimated noise variance for channel $C$ and $\sigma_{\max}^2$ is a reference maximum variance, and define $\text{Surprise}(o \mid M, A)$ as either a simple prediction error norm, $|o - \mathbb{E}[o \mid M, A]|$, or a negative log-likelihood $-\log P(o \mid M, A)$. These examples are not required by the rule but illustrate how it can be grounded in concrete quantities in practical systems.
 
 A full operational instantiation of $r(C)$ and $\text{Surprise}(o \mid M, A)$ is left to future work. Here we focus on establishing the conceptual framework. Once the epistemic structure is validated, subsequent work can formalize specific computational realizations appropriate to different modalities and architectures.
 
@@ -87,7 +100,7 @@ When $o$ contradicts the predictions of $M$ under assumptions $A$, the agent eva
     \item $H_2$: core model error.
 \end{itemize}
 
-We impose the prior ordering
+We posit the prior ordering
 \begin{equation}
 P(H_0) \ge P(H_1) \ge P(H_2),
 \end{equation}
@@ -96,9 +109,9 @@ and a diagnostic sequence
 H_0 \rightarrow H_1 \rightarrow H_2.
 \end{equation}
 
-Distinguishing between the hypotheses $H_0$, $H_1$, and $H_2$ is governed by the prior structure of the Algorithm rather than by a single inference step. The key insight is that different layers fail with vastly different frequencies in real systems. Physical laws and stable model structures typically have extremely high prior confidence, whereas observations and situational assumptions fail far more often. Thus, when an inconsistency arises, it is overwhelmingly more plausible that the observation channel is degraded or an assumption is violated than that the underlying model itself has changed. This mirrors scientific practice: anomalous readings are first attributed to instrumentation or context before concluding that new physics is required. The Algorithm formalizes this reasoning pattern by imposing a structured diagnostic ordering---channel $\rightarrow$ assumptions $\rightarrow$ model---which serves as an epistemic prior rather than a commitment to any specific algorithmic test. Systems may still evaluate multiple explanations, but the Algorithm encodes the relative plausibility of each layer as the guiding heuristic.
+Distinguishing between the hypotheses $H_0$, $H_1$, and $H_2$ is governed by the prior structure of the update rule rather than by a single undifferentiated inference step. The key insight is that different layers fail with vastly different frequencies in real systems. Physical laws and stable model structures typically have extremely high prior confidence, whereas observations and situational assumptions fail far more often. Thus, when an inconsistency arises, it is overwhelmingly more plausible that the observation channel is degraded or an assumption is violated than that the underlying model itself has changed. This mirrors scientific practice: anomalous readings are first attributed to instrumentation or context before concluding that new physics is required. The rule formalizes this reasoning pattern by imposing a structured diagnostic ordering---channel $\rightarrow$ assumptions $\rightarrow$ model---which serves as an epistemic prior rather than a commitment to any specific algorithmic test. Systems may still evaluate multiple explanations, but the update rule encodes the relative plausibility of each layer as the guiding heuristic.
 
-Although the diagnostic ordering $H_0 \rightarrow H_1 \rightarrow H_2$ provides a structured prior over explanatory causes, the Algorithm does not require that anomalies originate from a single layer. Real systems often experience mixed failures---for example, partial channel degradation combined with incorrect contextual assumptions. The Algorithm is compatible with such cases: the agent may maintain nonzero belief mass across multiple hypotheses and progressively reduce or refine them as additional evidence becomes available. This is analogous to existing reasoning and inference processes in probabilistic models, where explanations are iteratively narrowed rather than decided in a single step. The layered ordering therefore functions not as an exclusivity constraint, but as a principled guide for the order in which explanations should be examined and eliminated during convergence toward a coherent interpretation.
+Although the diagnostic ordering $H_0 \rightarrow H_1 \rightarrow H_2$ provides a structured prior over explanatory causes, the rule does not require that anomalies originate from a single layer. Real systems often experience mixed failures---for example, partial channel degradation combined with incorrect contextual assumptions. The rule is compatible with such cases: the agent may maintain nonzero belief mass across multiple hypotheses and progressively reduce or refine them as additional evidence becomes available. This is analogous to existing reasoning and inference processes in probabilistic models, where explanations are iteratively narrowed rather than decided in a single step. The layered ordering therefore functions not as an exclusivity constraint, but as a principled guide for the order in which explanations should be examined and eliminated during convergence toward a coherent interpretation.
 
 \section{Diagram: Layered Anomaly Interpretation}
 
@@ -128,7 +141,6 @@ Although the diagnostic ordering $H_0 \rightarrow H_1 \rightarrow H_2$ provides 
         ΔBelief ∝ r(C) × Surprise(o | M, A)
 \end{verbatim}
 
-
 \subsection{Case Study: The Yoshigahara Phase Change}
 
 This example is adapted from a numeric tree puzzle attributed to Nob Yoshigahara, a noted Japanese puzzle designer whose works often require abandoning an initially plausible local rule in favor of a deeper global structure.
@@ -144,69 +156,109 @@ Two epistemic policies produce qualitatively different inferences:
 If the observation is assumed to come from a noisy or unreliable channel, the agent attributes the mismatch to a channel error (\(H_0\)). The value ``7'' is treated as a likely transcription mistake, the subtraction model is retained, and the remaining unknown in the puzzle is inferred consistently with that model.
 
 \paragraph{High-Reliability Interpretation (Favoring \(H_2\)).}
-If the observation is instead assumed to be highly reliable---as is appropriate for a carefully designed logic puzzle---the gate for \(H_0\) effectively closes. The anomaly then forces evaluation of deeper hypotheses, and the agent concludes that the subtraction model itself must be incorrect (\(H_2\)). A search for an alternative rule yields a relationship consistent with all nodes, including the anomalous one.
+If the observation is instead assumed to be highly reliable---as is appropriate for a carefully designed logic puzzle---the gate for \(H_0\) effectively closes. The anomaly then forces evaluation of deeper hypotheses, and the agent concludes that the subtraction model itself must be reconsidered (\(H_2\)). In a full implementation, this would trigger a search over alternative rules, seeking a relationship that is consistent with all nodes, including the anomalous one, without discounting the trusted observation. The specific successor model is not the focus here; the key point is that high reliability prevents the system from explaining away the anomaly as noise and instead forces model-level revision.
 
 \paragraph{Epistemic Phase Change.}
-The two interpretations differ not in the data but in the epistemic policy governing whether the anomaly activates \(H_0\) or \(H_2\). A small change in channel reliability \(r(C)\) induces a qualitative shift in reasoning: from treating the anomaly as noise to treating it as decisive evidence for model revision. This illustrates how the Layered Epistemic Algorithm governs the flow of inference and how the ordering \(H_0 \rightarrow H_1 \rightarrow H_2\) shapes an agent's willingness to abandon an initially adequate model in favor of a more globally coherent one.
+The two interpretations differ not in the data but in the epistemic policy governing whether the anomaly activates \(H_0\) or \(H_2\). A small change in channel reliability $r(C)$ induces a qualitative shift in reasoning: from treating the anomaly as noise to treating it as decisive evidence for model revision. This illustrates how the Layered Epistemic Update Rule governs the flow of inference and how the ordering \(H_0 \rightarrow H_1 \rightarrow H_2\) shapes an agent's willingness to abandon an initially adequate model in favor of a more globally coherent one.
 
-% put these in your preamble if not already there
-\usepackage{tikz}
-\usetikzlibrary{positioning}
-
-% ... later, where you want the figure:
 \begin{figure}[h]
 \centering
+\begin{tikzpicture}[
+    every node.style={circle, draw, minimum size=10mm, font=\large},
+    >=stealth
+]
 
-\begin{tikzpicture}[node/.style={circle, draw, inner sep=2pt}]
-  % Row 1: 99, 72 -> 27
-  \node[node] (r1p) at (0,0) {27};
-  \node[node] (r1l) at (-1.6,-1) {99};
-  \node[node] (r1r) at ( 1.6,-1) {72};
-  \draw (r1p) -- (r1l);
-  \draw (r1p) -- (r1r);
+\node (n72) at (0,8) {72};
+\node (n27) at (1,7) {27};
+\node (n99) at (2,8) {99};
+\node (n18) at (2,6) {18};
+\node (n45) at (3,7) {45};
+\node (n39) at (4,6) {39};
+\node (n21) at (3,5) {21};
+\node (n36) at (5,5) {36};
+\node (nq)  at (4,4) {?};
+\node (n28) at (6,4) {28};
+\node (n13) at (5,3) {13};
+\node (n7)  at (6,2) {7};
+\node (n21b) at (7,3) {21};
 
-  % Row 2: 45, 27 -> 18
-  \node[node] (r2p) at (0,-2.2) {18};
-  \node[node] (r2l) at (-1.6,-3.2) {45};
-  \node[node] (r2r) at ( 1.6,-3.2) {27};
-  \draw (r2p) -- (r2l);
-  \draw (r2p) -- (r2r);
+\draw[->] (n72) -- (n27);
+\draw[->] (n99) -- (n27);
+\draw[->] (n27) -- (n18);
+\draw[->] (n45) -- (n18);
+\draw[->] (n39) -- (n21);
+\draw[->] (n18) -- (n21);
+\draw[->] (n36) -- (nq);
+\draw[->] (n21) -- (nq);
+\draw[->] (n28) -- (n13);
+\draw[->] (nq)  -- (n13);
+\draw[->] (n13) -- (n7);
+\draw[->] (n21b) -- (n7);
 
-  % Row 3: 39, 18 -> 21
-  \node[node] (r3p) at (0,-4.4) {21};
-  \node[node] (r3l) at (-1.6,-5.4) {39};
-  \node[node] (r3r) at ( 1.6,-5.4) {18};
-  \draw (r3p) -- (r3l);
-  \draw (r3p) -- (r3r);
-
-  % Row 4: 28, 15 -> 13
-  \node[node] (r4p) at (0,-6.6) {13};
-  \node[node] (r4l) at (-1.6,-7.6) {28};
-  \node[node] (r4r) at ( 1.6,-7.6) {15};
-  \draw (r4p) -- (r4l);
-  \draw (r4p) -- (r4r);
-
-  % Row 5: 13, 21 -> 7  (anomaly)
-  \node[node, draw=red, thick] (r5p) at (0,-8.8) {7};
-  \node[node]                    (r5l) at (-1.6,-9.8) {13};
-  \node[node]                    (r5r) at ( 1.6,-9.8) {21};
-  \draw[red, thick] (r5p) -- (r5l);
-  \draw[red, thick] (r5p) -- (r5r);
 \end{tikzpicture}
-\caption{Numeric relations in the Yoshigahara puzzle. 
+
+\caption{Numeric relations in the Yoshigahara-style puzzle. 
 Each row shows two children and their parent. The subtraction rule 
-$|a-b|=c$ fits the first four rows but fails for the last, where 
+$|a-b|=c$ fits the upper part of the diagram but fails at the bottom, where 
 $|21-13|=8$ instead of the observed $7$, creating the anomaly that 
-triggers the epistemic phase change.}
+triggers the epistemic phase change under the Layered Epistemic Update Rule.}
 \end{figure}
 
+\subsection{Epistemic Phase Change Curve}
+
+The phase change can be visualized as a qualitative shift in how anomalies are treated as channel reliability varies. For example, one may consider a simple curve in which, below a certain reliability threshold, anomalies are primarily attributed to $H_0$ (and thus discounted), whereas above that threshold they increasingly favor $H_2$ and trigger model revision. The exact form of this curve depends on the application, but the underlying idea is that reliability acts as a structural switch between error correction and model learning.
+
+\section{Algorithmic Illustration (Pseudocode)}
+
+The following pseudocode sketch illustrates how an agent might instantiate the Layered Epistemic Update Rule when processing a single observation. It is intentionally schematic and abstracts away from any particular architecture or domain.
+
+\begin{verbatim}
+def process_observation(o, C, M, A, priors=(0.6, 0.3, 0.1)):
+    # 1. Estimate channel reliability r(C) in [0, 1]
+    r_C = estimate_reliability(C)
+
+    # 2. Compute surprise under current model and assumptions
+    expected  = predict_under_model(M, A)
+    surprise  = compute_surprise(o, expected)
+
+    # 3. Scale update magnitude by reliability and surprise
+    delta_belief = r_C * surprise
+
+    # 4. If inconsistency is large, traverse hypothesis ladder
+    if surprise > INCONSISTENCY_THRESHOLD:
+        hypotheses = [("H0", priors[0]),
+                      ("H1", priors[1]),
+                      ("H2", priors[2])]
+        for H, prior in hypotheses:
+            evidence  = gather_evidence(H, o, C, M, A)
+            posterior = update_posterior(prior, evidence)
+            if posterior > ACCEPTANCE_THRESHOLD:
+                if H == "H0":
+                    # discount or correct the observation
+                    o = correct_channel(o, C)
+                    return process_observation(o, C, M, A, priors)
+                elif H == "H1":
+                    # revise auxiliary assumptions
+                    A = revise_assumptions(A, o)
+                    return M, A
+                elif H == "H2":
+                    # revise the core model
+                    M = revise_model(M, o, A)
+                    return M, A
+    else:
+        # No major inconsistency: apply a standard belief update
+        update_beliefs(M, A, delta_belief)
+        return M, A
+\end{verbatim}
+
+Applied to the Yoshigahara example, low channel reliability (e.g., a rough handwritten note) would tend to favor $H_0$, correct the anomalous ``7'' to the expected ``8'', and retain the subtraction model. High channel reliability (e.g., a trusted puzzle source) would instead favor $H_2$, triggering model revision and the search for an alternative rule that accounts for the anomaly without discounting the observation. This illustrates the epistemic phase change induced by varying $r(C)$ while holding the data fixed.
 
 
 \section{Relevance to Spatial and Embodied Intelligence}
 
-Spatial intelligence depends on high-reliability perceptual channels that define objects, geometry, and affordances. The proposed Algorithm integrates naturally with such systems by weighting evidence appropriately and providing a formal mechanism for handling inconsistent observations.
+Spatial intelligence depends on high-reliability perceptual channels that define objects, geometry, and affordances. The proposed update rule integrates naturally with such systems by weighting evidence appropriately and providing a formal mechanism for handling inconsistent observations.
 
-Embodied agents frequently encounter noise, occlusion, and shifting context. The Algorithm offers a general-purpose reliability framework that bridges perception and reasoning, supporting the full loop:
+Embodied agents frequently encounter noise, occlusion, and shifting context. The rule offers a general-purpose reliability framework that bridges perception and reasoning, supporting the full loop:
 \[
 \text{Perceive} \rightarrow \text{Interpret} \rightarrow \text{Resolve Inconsistency} \rightarrow \text{Update Model} \rightarrow \text{Perceive Again}.
 \]
@@ -214,19 +266,19 @@ In multimodal agents, where visual, proprioceptive, linguistic, and other signal
 
 \section{Illustrative Examples and Future Empirical Work}
 
-Although this note does not include a full empirical evaluation, the Algorithm lends itself naturally to simple illustrative examples, which we leave to future work once the conceptual framework is established. A typical demonstration would involve two observation channels with differing reliabilities and a single anomalous data point: under the Algorithm, a high-reliability, high-surprise anomaly would trigger a structured diagnostic search (channel $\rightarrow$ assumptions $\rightarrow$ model), whereas a low-reliability anomaly would be discounted. Similar thought experiments can be constructed for multimodal perception or diagram-based reasoning tasks. These examples are straightforward to instantiate, but the present work focuses on articulating the underlying epistemic principle; empirical illustrations will follow once the foundational structure is validated.
+Although this note does not include a full empirical evaluation, the Layered Epistemic Update Rule lends itself naturally to simple illustrative examples, which we leave to future work once the conceptual framework is established. A typical demonstration would involve two observation channels with differing reliabilities and a single anomalous data point: under the rule, a high-reliability, high-surprise anomaly would trigger a structured diagnostic search (channel $\rightarrow$ assumptions $\rightarrow$ model), whereas a low-reliability anomaly would be discounted. Similar thought experiments can be constructed for multimodal perception or diagram-based reasoning tasks. These examples are straightforward to instantiate, but the present work focuses on articulating the underlying epistemic principle; empirical illustrations will follow once the foundational structure is validated.
 
 \section{Epistemic Scope and Relationship to Action}
 
-The proposed Algorithm is explicitly epistemic: it governs how an agent updates its internal beliefs in response to anomalous observations, and it does not prescribe a decision-making or control strategy. Any downstream planning or action-selection mechanism---whether based on reinforcement learning, optimal control, active inference, or heuristic policies---can operate on the beliefs updated by this Algorithm. In addition to serving as a foundation for belief revision, the Algorithm also provides a principled criterion for \emph{when} to continue a reasoning chain and when to halt or redirect it: high-reliability, high-surprise observations warrant deeper inference, whereas low-reliability signals justify interrupting or discounting further reasoning. Thus, while the Algorithm does not define a full behavioural policy, it naturally interfaces with decision frameworks by modulating the flow of reasoning itself. Integrating this epistemic rule with specific action models remains an important direction for future work but lies outside the scope of the present note.
+The proposed update rule is explicitly epistemic: it governs how an agent updates its internal beliefs in response to anomalous observations, and it does not prescribe a decision-making or control strategy. Any downstream planning or action-selection mechanism---whether based on reinforcement learning, optimal control, active inference, or heuristic policies---can operate on the beliefs updated by this rule. In addition to serving as a foundation for belief revision, the rule also provides a principled criterion for \emph{when} to continue a reasoning chain and when to halt or redirect it: high-reliability, high-surprise observations warrant deeper inference, whereas low-reliability signals justify interrupting or discounting further reasoning. Thus, while the rule does not define a full behavioural policy, it naturally interfaces with decision frameworks by modulating the flow of reasoning itself. Integrating this epistemic rule with specific action models remains an important direction for future work but lies outside the scope of the present note.
 
 \section{Scope and Limitations}
 
-The Layered Epistemic Algorithm is intended as a conceptual principle for belief revision and anomaly interpretation, not as a complete inference or control framework. It assumes that the agent maintains a predictive model $M$, a set of auxiliary assumptions $A$, and some means of estimating channel reliability $r(C)$, but it does not prescribe how these components are learned or represented. The Algorithm does not address adversarial settings, strategic manipulation, or environments where the generative structure is unknown or undefined. Its role is to guide epistemic organization---how explanations are prioritized and how belief updates are weighted---while leaving the design of decision policies, uncertainty estimators, and learning mechanisms to domain-specific methods. As such, the Algorithm should be viewed as a foundational reasoning principle that complements, rather than replaces, existing computational frameworks.
+The Layered Epistemic Update Rule is intended as a conceptual principle for belief revision and anomaly interpretation, not as a complete inference or control framework. It assumes that the agent maintains a predictive model $M$, a set of auxiliary assumptions $A$, and some means of estimating channel reliability $r(C)$, but it does not prescribe how these components are learned or represented. The rule does not address adversarial settings, strategic manipulation, or environments where the generative structure is unknown or undefined. Its role is to guide epistemic organization---how explanations are prioritized and how belief updates are weighted---while leaving the design of decision policies, uncertainty estimators, and learning mechanisms to domain-specific methods. As such, the rule should be viewed as a foundational reasoning principle that complements, rather than replaces, existing computational frameworks.
 
 \section{Conclusion}
 
-The Layered Epistemic Algorithm provides a unified, domain-general principle for anomaly handling in intelligent systems. By combining reliability-weighted belief updates with a structured causal ordering of hypotheses, the Algorithm strengthens reasoning robustness across spatial, multimodal, and embodied AI. It captures, in a compact mathematical form, the intuition that not all signals are equal, not all explanations are equally likely, and that good reasoning requires prioritizing how we interpret mismatches between observation and expectation. Future work will explore concrete instantiations, toy examples, and empirical evaluations in robotic and multimodal settings.
+The Layered Epistemic Update Rule provides a unified, domain-general principle for anomaly handling in intelligent systems. By combining reliability-weighted belief updates with a structured causal ordering of hypotheses, the rule strengthens reasoning robustness across spatial, multimodal, and embodied AI. It captures, in a compact mathematical form, the intuition that not all signals are equal, not all explanations are equally likely, and that good reasoning requires prioritizing how we interpret mismatches between observation and expectation. Future work will explore concrete instantiations, toy examples, and empirical evaluations in robotic and multimodal settings.
 
 \section*{Acknowledgments}
 
